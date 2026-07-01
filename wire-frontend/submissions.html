@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WIRE – Submissions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07090f; --surface: #0d1117;
+      --border: rgba(255,255,255,0.07);
+      --wire: #3b82f6; --accent: #06b6d4;
+      --text: #e2e8f0; --muted: #64748b;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--mono); padding: 3rem; }
+    h1 { font-family: var(--sans); font-size: 2rem; font-weight: 800; color: var(--wire); margin-bottom: 0.4rem; }
+    .sub-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 2.5rem; }
+    .back-link { display: inline-block; margin-bottom: 2rem; font-size: 0.72rem; color: var(--wire); text-decoration: none; letter-spacing: 0.1em; }
+    .back-link:hover { text-decoration: underline; }
+    .empty { color: var(--muted); font-size: 0.8rem; margin-top: 1rem; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 1.5rem 2rem; margin-bottom: 1rem;
+      border-left: 3px solid var(--wire);
+    }
+    .card-name  { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .card-email { font-size: 0.72rem; color: var(--accent); margin-bottom: 0.8rem; }
+    .card-message { font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+    .card-time { font-size: 0.62rem; color: var(--muted); margin-top: 0.8rem; opacity: 0.6; }
+    .clear-btn {
+      margin-top: 2rem; padding: 0.6rem 1.4rem;
+      background: transparent; border: 1px solid #ef4444;
+      color: #ef4444; font-family: var(--mono);
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .clear-btn:hover { background: rgba(239,68,68,0.1); }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">← Back to WIRE</a>
+  <h1>Submissions</h1>
+  <p class="sub-label">All entries stored in LocalStorage · wire_submissions</p>
+  <div id="list"></div>
+
+  <script>
+    const list = document.getElementById('list');
+    const data = JSON.parse(localStorage.getItem('wire_submissions') || '[]');
+
+    if (data.length === 0) {
+      list.innerHTML = '<p class="empty">No submissions yet. Go fill the form!</p>';
+    } else {
+      data.slice().reverse().forEach(entry => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-name">${entry.name}</div>
+          <div class="card-email">${entry.email}</div>
+          <div class="card-message">${entry.message}</div>
+          <div class="card-time">${new Date(entry.timestamp).toLocaleString()}</div>
+        `;
+        list.appendChild(card);
+      });
+
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'clear-btn';
+      clearBtn.textContent = 'Clear All Submissions';
+      clearBtn.onclick = () => {
+        localStorage.removeItem('wire_submissions');
+        location.reload();
+      };
+      list.appendChild(clearBtn);
+    }
+  </script>
+</body>
+</html>
