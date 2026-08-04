@@ -1,0 +1,90 @@
+.submissionsPage {
+  min-height: 100vh;
+  padding: 8rem 3rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.backLink {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wire);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: var(--accent);
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.subLabel {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 3rem;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.card {
+  background: var(--surface);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cardName {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cardEmail {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--wire);
+}
+
+.cardMessage {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.empty {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .submissionsPage {
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
+  }
+}

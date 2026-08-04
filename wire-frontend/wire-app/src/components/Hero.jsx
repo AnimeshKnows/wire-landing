@@ -1,10 +1,12 @@
+import styles from "./Hero.module.css";
+
 function Hero() {
   return (
     <section id="home">
-      <div className="hero-glow"></div>
+      <div className={styles.heroGlow}></div>
 
       {/* Decorative SVG network */}
-      <svg className="hero-network" viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg className={styles.heroNetwork} viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="300" cy="250" r="6" fill="#3b82f6" />
         <circle cx="120" cy="100" r="4" fill="#06b6d4" />
         <circle cx="480" cy="130" r="4" fill="#3b82f6" />
@@ -23,41 +25,41 @@ function Hero() {
         <line x1="520" y1="370" x2="250" y2="420" stroke="#06b6d4" strokeWidth="0.5" strokeDasharray="4 4" />
       </svg>
 
-      <div className="hero-content">
-        <div className="hero-tag">Now in Beta &nbsp;·&nbsp; WebRTC Powered</div>
+      <div className={styles.heroContent}>
+        <div className={styles.heroTag}>Now in Beta &nbsp;·&nbsp; WebRTC Powered</div>
 
-        <h1 className="hero-title">
+        <h1 className={styles.heroTitle}>
           Connect Peers.<br />
           <em>No Servers.</em><br />
           No Delay.
         </h1>
 
-        <p className="hero-sub">
+        <p className={styles.heroSub}>
           WIRE is a blazing-fast P2P communication engine built on WebRTC.<br />
           Instant relay. Zero infrastructure lock-in. Open protocol.
         </p>
 
-        <div className="hero-actions">
-          <a href="#contact" className="btn-primary">
+        <div className={styles.heroActions}>
+          <a href="#contact" className={styles.btnPrimary}>
             <i className="fa-solid fa-bolt"></i> Get Early Access
           </a>
-          <a href="#features" className="btn-ghost">
+          <a href="#features" className={styles.btnGhost}>
             <i className="fa-solid fa-circle-play"></i> See How It Works
           </a>
         </div>
 
-        <div className="hero-stats">
+        <div className={styles.heroStats}>
           <div>
-            <div className="stat-num">&lt;50ms</div>
-            <div className="stat-label">Avg Latency</div>
+            <div className={styles.statNum}>&lt;50ms</div>
+            <div className={styles.statLabel}>Avg Latency</div>
           </div>
           <div>
-            <div className="stat-num">E2EE</div>
-            <div className="stat-label">By Default</div>
+            <div className={styles.statNum}>E2EE</div>
+            <div className={styles.statLabel}>By Default</div>
           </div>
           <div>
-            <div className="stat-num">0</div>
-            <div className="stat-label">Central Servers</div>
+            <div className={styles.statNum}>0</div>
+            <div className={styles.statLabel}>Central Servers</div>
           </div>
         </div>
       </div>

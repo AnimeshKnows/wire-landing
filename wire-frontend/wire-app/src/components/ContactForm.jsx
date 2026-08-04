@@ -1,21 +1,22 @@
 import { useState } from "react";
+import styles from "./ContactForm.module.css";
 
 function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [notice, setNotice] = useState({ text: "", color: "" });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const name = formData.name.trim();
     const email = formData.email.trim();
     const message = formData.message.trim();
 
-    // Validation
     if (!name) {
       setNotice({ text: "✗ Name is required.", color: "#ef4444" });
       return;
@@ -29,38 +30,51 @@ function ContactForm() {
       return;
     }
 
-    // LocalStorage persistence
-    const entry = { name, email, message, timestamp: new Date().toISOString() };
-    const existing = JSON.parse(localStorage.getItem("wire_submissions") || "[]");
-    existing.push(entry);
-    localStorage.setItem("wire_submissions", JSON.stringify(existing));
+    setSubmitting(true);
+    setNotice({ text: "Sending...", color: "#64748b" });
 
-    setNotice({ text: `✓ Got it, ${name}! We'll be in touch soon.`, color: "#06b6d4" });
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      const res = await fetch("http://localhost:8080/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server responded with ${res.status}`);
+      }
+
+      setNotice({ text: `✓ Got it, ${name}! We'll be in touch soon.`, color: "#06b6d4" });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      setNotice({ text: "✗ Something went wrong. Please try again.", color: "#ef4444" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <section id="contact">
       <div className="section-label">Get In Touch</div>
-      <div className="contact-wrap">
-        <div className="contact-info">
+      <div className={styles.contactWrap}>
+        <div className={styles.contactInfo}>
           <h3>Ready to go<br />server-free?</h3>
           <p>
             Apply for early access or reach out for partnership inquiries, API questions, or just to say hi.
           </p>
-          <div className="contact-detail">
+          <div className={styles.contactDetail}>
             <i className="fa-solid fa-envelope"></i> hello@wire-engine.dev
           </div>
-          <div className="contact-detail">
+          <div className={styles.contactDetail}>
             <i className="fa-brands fa-github"></i> github.com/wire-engine
           </div>
-          <div className="contact-detail">
+          <div className={styles.contactDetail}>
             <i className="fa-solid fa-location-dot"></i> Lucknow, India
           </div>
         </div>
 
-        <form className="contact-form" id="contactForm" onSubmit={handleSubmit}>
-          <div className="form-group">
+        <form className={styles.contactForm} id="contactForm" onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
             <label htmlFor="name">Name</label>
             <input
               type="text"
@@ -72,7 +86,7 @@ function ContactForm() {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -84,7 +98,7 @@ function ContactForm() {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="message">Message</label>
             <textarea
               id="message"
@@ -95,10 +109,10 @@ function ContactForm() {
               required
             ></textarea>
           </div>
-          <button type="submit" className="form-submit">
-            <i className="fa-solid fa-paper-plane"></i> &nbsp;Send Message
+          <button type="submit" className={styles.formSubmit} disabled={submitting}>
+            <i className="fa-solid fa-paper-plane"></i> &nbsp;{submitting ? "Sending..." : "Send Message"}
           </button>
-          <p className="form-notice" id="formNotice" style={{ color: notice.color }}>
+          <p className={styles.formNotice} id="formNotice" style={{ color: notice.color }}>
             {notice.text}
           </p>
         </form>

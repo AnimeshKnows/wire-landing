@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import styles from "./Navbar.module.css";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,15 +16,15 @@ function Navbar() {
   };
 
   return (
-    <nav>
-      <a href="#home" className="nav-logo">WIRE<span>.</span></a>
+    <nav className={styles.nav}>
+      <a href="#home" className={styles.navLogo}>WIRE<span>.</span></a>
 
-      <ul className={`nav-links ${menuOpen ? "open" : ""}`} id="navLinks">
+      <ul className={`${styles.navLinks} ${menuOpen ? styles.open : ""}`} id="navLinks">
         <li><a href="#home" onClick={closeMenu}>Home</a></li>
         <li><a href="#features" onClick={closeMenu}>Features</a></li>
-        <li className={`nav-dropdown ${servicesOpen ? "open" : ""}`} id="servicesDropdown">
+        <li className={`${styles.navDropdown} ${servicesOpen ? styles.open : ""}`} id="servicesDropdown">
           <a href="#services" onClick={handleServicesClick}>Services</a>
-          <div className="dropdown-menu">
+          <div className={styles.dropdownMenu}>
             <a href="#services" onClick={closeMenu}><i className="fa-solid fa-satellite-dish"></i> &nbsp;P2P Relay</a>
             <a href="#services" onClick={closeMenu}><i className="fa-solid fa-shield-halved"></i> &nbsp;End-to-End Encryption</a>
             <a href="#services" onClick={closeMenu}><i className="fa-solid fa-code"></i> &nbsp;Developer API</a>
@@ -31,11 +32,11 @@ function Navbar() {
           </div>
         </li>
         <li><Link to="/submissions" onClick={closeMenu}>Submissions</Link></li>
-        <li><a href="#contact" className="nav-cta" onClick={closeMenu}>Get Access</a></li>
+        <li><a href="#contact" className={styles.navCta} onClick={closeMenu}>Get Access</a></li>
       </ul>
 
       <button
-        className="hamburger"
+        className={styles.hamburger}
         id="hamburger"
         aria-label="Toggle menu"
         onClick={() => setMenuOpen(!menuOpen)}
