@@ -32,6 +32,7 @@ function Navbar() {
           </div>
         </li>
         <li><Link to="/submissions" onClick={closeMenu}>Submissions</Link></li>
+        <li><Link to="/tasks" onClick={closeMenu}>Tasks</Link></li>
         <li><a href="#contact" className={styles.navCta} onClick={closeMenu}>Get Access</a></li>
       </ul>
 
