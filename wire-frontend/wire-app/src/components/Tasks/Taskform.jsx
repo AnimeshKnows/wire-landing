@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addTask } from "../../utils/taskStorage";
+import { getToken } from "../../utils/auth";
 import styles from "./Tasks.module.css";
 
 function TaskForm({ onTaskAdded }) {
@@ -8,10 +8,11 @@ function TaskForm({ onTaskAdded }) {
   const [priority, setPriority] = useState("Medium");
   const [dueDate, setDueDate] = useState("");
   const [notice, setNotice] = useState({ text: "", color: "" });
+  const [submitting, setSubmitting] = useState(false);
 
   const todayStr = new Date().toISOString().split("T")[0];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmedTitle = title.trim();
 
@@ -28,15 +29,41 @@ function TaskForm({ onTaskAdded }) {
       return;
     }
 
-    addTask({ title: trimmedTitle, description: description.trim(), priority, dueDate });
+    setSubmitting(true);
+    setNotice({ text: "Adding task...", color: "#64748b" });
 
-    setTitle("");
-    setDescription("");
-    setPriority("Medium");
-    setDueDate("");
-    setNotice({ text: "✓ Task added.", color: "#06b6d4" });
+    try {
+      const res = await fetch("http://localhost:8080/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({
+          title: trimmedTitle,
+          description: description.trim(),
+          priority,
+          dueDate,
+          completed: false,
+        }),
+      });
 
-    onTaskAdded();
+      if (!res.ok) {
+        throw new Error(`Server responded with ${res.status}`);
+      }
+
+      setTitle("");
+      setDescription("");
+      setPriority("Medium");
+      setDueDate("");
+      setNotice({ text: "✓ Task added.", color: "#06b6d4" });
+
+      onTaskAdded();
+    } catch (err) {
+      setNotice({ text: "✗ Couldn't add task. Please try again.", color: "#ef4444" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -67,7 +94,9 @@ function TaskForm({ onTaskAdded }) {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <button type="submit" className={styles.submitBtn}>+ Add Task</button>
+      <button type="submit" className={styles.submitBtn} disabled={submitting}>
+        {submitting ? "Adding..." : "+ Add Task"}
+      </button>
       <p className={styles.formNotice} style={{ color: notice.color }}>
         {notice.text}
       </p>

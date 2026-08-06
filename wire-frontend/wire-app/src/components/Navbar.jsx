@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { isLoggedIn, clearToken } from "../utils/auth";
 import styles from "./Navbar.module.css";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const navigate = useNavigate();
+  const loggedIn = isLoggedIn();
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -13,6 +16,12 @@ function Navbar() {
       e.preventDefault();
       setServicesOpen(!servicesOpen);
     }
+  };
+
+  const handleLogout = () => {
+    clearToken();
+    closeMenu();
+    navigate("/login");
   };
 
   return (
@@ -33,7 +42,15 @@ function Navbar() {
         </li>
         <li><Link to="/submissions" onClick={closeMenu}>Submissions</Link></li>
         <li><Link to="/tasks" onClick={closeMenu}>Tasks</Link></li>
-        <li><a href="#contact" className={styles.navCta} onClick={closeMenu}>Get Access</a></li>
+        {loggedIn ? (
+          <li>
+            <a href="#logout" className={styles.navCta} onClick={(e) => { e.preventDefault(); handleLogout(); }}>
+              Logout
+            </a>
+          </li>
+        ) : (
+          <li><Link to="/login" className={styles.navCta} onClick={closeMenu}>Login</Link></li>
+        )}
       </ul>
 
       <button

@@ -1,15 +1,43 @@
-import { deleteTask, toggleComplete } from "../../utils/taskStorage";
+import { getToken } from "../../utils/auth";
 import styles from "./Tasks.module.css";
 
 function TaskList({ tasks, onTaskChanged }) {
-  const handleToggle = (id) => {
-    toggleComplete(id);
-    onTaskChanged();
+  const handleToggle = async (task) => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/tasks/${task.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({ ...task, completed: !task.completed }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server responded with ${res.status}`);
+      }
+
+      onTaskChanged();
+    } catch (err) {
+      console.error("Failed to toggle task:", err);
+    }
   };
 
-  const handleDelete = (id) => {
-    deleteTask(id);
-    onTaskChanged();
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:8080/api/tasks/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server responded with ${res.status}`);
+      }
+
+      onTaskChanged();
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+    }
   };
 
   if (tasks.length === 0) {
@@ -27,7 +55,7 @@ function TaskList({ tasks, onTaskChanged }) {
             <input
               type="checkbox"
               checked={task.completed}
-              onChange={() => handleToggle(task.id)}
+              onChange={() => handleToggle(task)}
             />
             <div className={styles.taskInfo}>
               <h4>{task.title}</h4>

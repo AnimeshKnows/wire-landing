@@ -1,22 +1,51 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TaskForm from "../components/Tasks/TaskForm";
 import TaskList from "../components/Tasks/TaskList";
 import TaskFilterBar from "../components/Tasks/TaskFilterBar";
-import { getTasks } from "../utils/taskStorage";
+import { getToken, isLoggedIn } from "../utils/auth";
 import styles from "../components/Tasks/Tasks.module.css";
 
 function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const refreshTasks = () => {
-    setTasks(getTasks());
+  const refreshTasks = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("http://localhost:8080/api/tasks", {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        navigate("/login");
+        return;
+      }
+      if (!res.ok) {
+        throw new Error(`Server responded with ${res.status}`);
+      }
+
+      const data = await res.json();
+      setTasks(data);
+    } catch (err) {
+      setError("Couldn't load tasks. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) {
+      navigate("/login");
+      return;
+    }
     refreshTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredTasks = tasks
@@ -46,7 +75,13 @@ function Tasks() {
         onSearchChange={setSearchQuery}
       />
 
-      <TaskList tasks={filteredTasks} onTaskChanged={refreshTasks} />
+      {loading ? (
+        <p className={styles.emptyState}>Loading tasks...</p>
+      ) : error ? (
+        <p className={styles.emptyState}>{error}</p>
+      ) : (
+        <TaskList tasks={filteredTasks} onTaskChanged={refreshTasks} />
+      )}
     </div>
   );
 }
