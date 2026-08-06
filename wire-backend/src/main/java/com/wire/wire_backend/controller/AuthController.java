@@ -23,7 +23,7 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/register")
+  @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username already exists.");
@@ -32,6 +32,7 @@ public class AuthController {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully.");
