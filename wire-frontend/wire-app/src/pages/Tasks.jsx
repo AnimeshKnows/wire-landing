@@ -5,6 +5,7 @@ import TaskList from "../components/Tasks/TaskList";
 import TaskFilterBar from "../components/Tasks/TaskFilterBar";
 import { getToken, isLoggedIn } from "../utils/auth";
 import styles from "../components/Tasks/Tasks.module.css";
+import { API_BASE_URL } from "../config";
 
 function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -18,7 +19,7 @@ function Tasks() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost:8080/api/tasks", {
+      const res = await fetch(`${API_BASE_URL}/api/tasks`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
 

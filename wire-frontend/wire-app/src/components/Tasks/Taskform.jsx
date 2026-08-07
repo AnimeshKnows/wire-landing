@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getToken } from "../../utils/auth";
 import styles from "./Tasks.module.css";
+import { API_BASE_URL } from "../../config";
 
 function TaskForm({ onTaskAdded }) {
   const [title, setTitle] = useState("");
@@ -33,7 +34,7 @@ function TaskForm({ onTaskAdded }) {
     setNotice({ text: "Adding task...", color: "#64748b" });
 
     try {
-      const res = await fetch("http://localhost:8080/api/tasks", {
+      const res = await fetch(`${API_BASE_URL}/api/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

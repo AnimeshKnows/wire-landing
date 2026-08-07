@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { saveToken } from "../utils/auth";
+import { API_BASE_URL } from "../config";
 
 function Register() {
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
@@ -36,7 +37,7 @@ function Register() {
     setNotice({ text: "Registering...", color: "#64748b" });
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/register", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
@@ -50,7 +51,7 @@ function Register() {
       setNotice({ text: "✓ Registered! Logging you in...", color: "#06b6d4" });
 
       // Auto-login after successful registration
-      const loginRes = await fetch("http://localhost:8080/api/auth/login", {
+      const loginRes = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

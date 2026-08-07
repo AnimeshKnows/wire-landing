@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./ContactForm.module.css";
+import { API_BASE_URL } from "../config";
 
 function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -34,7 +35,7 @@ function ContactForm() {
     setNotice({ text: "Sending...", color: "#64748b" });
 
     try {
-      const res = await fetch("http://localhost:8080/submit", {
+      const res = await fetch(`${API_BASE_URL}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),

@@ -1,10 +1,11 @@
 import { getToken } from "../../utils/auth";
 import styles from "./Tasks.module.css";
+import { API_BASE_URL } from "../../config";
 
 function TaskList({ tasks, onTaskChanged }) {
   const handleToggle = async (task) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/tasks/${task.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/tasks/${task.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +26,7 @@ function TaskList({ tasks, onTaskChanged }) {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/tasks/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/tasks/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${getToken()}` },
       });

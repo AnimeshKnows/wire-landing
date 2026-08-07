@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Submissions.module.css";
+import { API_BASE_URL } from "../config";
 
 function Submissions() {
   const [entries, setEntries] = useState([]);
@@ -10,7 +11,7 @@ function Submissions() {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const res = await fetch("http://localhost:8080/contacts");
+        const res = await fetch(`${API_BASE_URL}/contacts`);
         if (!res.ok) {
           throw new Error(`Server responded with ${res.status}`);
         }
